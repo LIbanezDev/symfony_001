@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,12 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AuthController extends AbstractController
 {
-    #[Route('/signup', name: 'auth_signup', methods: 'POST')]
+    /**
+     * List the rewards of the specified user.
+     *
+     * This call takes into account all confirmed awards, but not pending or refused awards.
+     */
+    #[Route('/api/signup', name: 'auth_signup', methods: 'POST')]
     public function registration(
         UserPasswordHasherInterface $passwordHasher,
         Request $request,

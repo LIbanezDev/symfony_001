@@ -2,5 +2,6 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 
+# config/routes.yaml
 api_login:
   path: /api/login

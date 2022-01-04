@@ -25,7 +25,6 @@ class CircularReferenceHandler
                 return $this->router->generate('api_user_id', ['id' => $object->getId()]);
             case $object instanceof Pet:
                 return $this->router->generate('api_pet_one', ['id' => $object->getId()]);
-
         }
         return $object->toString();
     }
