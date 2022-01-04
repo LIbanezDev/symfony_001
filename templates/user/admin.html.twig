@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin page!{% endblock %}
+
+{% block body %}
+    <h1>
+        Esta pagina esta reservada. Tu nombre: {{ app.user.name }} - tu email: {{ app.user.email }}
+    </h1>
+{% endblock %}

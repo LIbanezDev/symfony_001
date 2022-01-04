@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lucky Number Index!{% endblock %}
+
+{% block body %}
+    <h1> Este es el template de lucky number!:  {{ number }} </h1>
+    <a href="{{ path('app_lucky_string', {length:34}) }}"> Ir a un random string</a>
+{% endblock %}

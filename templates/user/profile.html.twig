@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+<h1>
+    Este es tu perfil - {{ app.user.name }} naciste el {{ app.user.bornDate.format('d-m-Y') }}
+</h1>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lucky String Index!{% endblock %}
+
+{% block body %}
+    <h1> Este es el template de lucky string:  {{ str }} </h1>
+    <a href="{{ path('app_lucky_city') }}"> Ir a ver las cities </a>
+    <a href="{{ path('app_lucky_number') }}"> Obtener un numero random </a>
+{% endblock %}
