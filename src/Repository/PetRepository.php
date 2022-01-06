@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Clinic;
 use App\Entity\Pet;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,19 +25,26 @@ class PetRepository extends ServiceEntityRepository
     // /**
     //  * @return Pet[] Returns an array of Pet objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function findPaginated($page)
     {
+        $perPage = 4;
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->leftJoin('p.clinic', 'clinic')
+            ->leftJoin('p.owner', 'owner')
+            ->setMaxResults(25)
             ->getQuery()
-            ->getResult()
-        ;
+            ->setMaxResults($perPage)
+            ->setFirstResult(($page * $perPage) - $perPage)
+            ->getResult();
     }
-    */
+
+    public function getCount() {
+        return $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
     /*
     public function findOneBySomeField($value): ?Pet

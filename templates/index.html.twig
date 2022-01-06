@@ -3,5 +3,49 @@
 {% block title %}Inicio{% endblock %}
 
 {% block body %}
-    <h1> Symfony dev mode </h1>
+    <div class="row mt-5">
+        <div class="col-md-12 justify-content-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item {{ app.request.get('page') is null ? 'disabled' :
+                    (app.request.get('page') == 1 ? 'disabled' : '') }}" id="previous-lnk">
+                        <a class="page-link" href="/?page={{ app.request.get('page') - 1 }}" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Anterior</span>
+                        </a>
+                    </li>
+                    <li class="page-item {{ (app.request.get('page') == 1 or app.request.get('page') is null) ? 'active' : '' }}">
+                        <a class="page-link" href="/?page=1">1</a></li>
+                    {% for i in 2..pages %}
+                        <li class="page-item {{ app.request.get('page') == i ? 'active' : '' }}"><a class="page-link" href="/?page={{ i }}">{{ i }}</a></li>
+                    {% endfor %}
+                    <li class="page-item {{ app.request.get('page') == pages ? 'disabled' : '' }}">
+                        <a class="page-link" href="/?page={{ app.request.get('page') is null ? 2 : app.request.get('page') + 1 }}" aria-label="Siguiente">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Siguiente</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="mb-5">
+        <div class="row multi-column">
+            {% for pet in pets %}
+                <div class="col-md-3 mt-5 animate__animated animate__fadeIn">
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="http://koldercats.com/wp-content/uploads/2020/04/2sickcat.jpeg" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ pet.name }}</h5>
+                            <p class="card-text">Clinica: <strong>{{ pet.clinic.name }} </strong></p>
+                            <p class="card-text">Dueño: <strong>{{ pet.owner.name }} </strong></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+
 {% endblock %}

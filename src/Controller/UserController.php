@@ -30,12 +30,6 @@ class UserController extends AbstractController
         return $this->json($user);
     }
 
-    #[Route('/admin', name: 'admin_panel')]
-    public function index(): Response
-    {
-        return $this->render('user/admin.html.twig');
-    }
-
     #[Route('/profile', name: 'profile_page')]
     public function profile(): Response
     {

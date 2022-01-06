@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registro!{% endblock %}
+
+{% block body %}
+    <form id="form-signup" autocomplete="off">
+        <div class="mb-3">
+            <label for="inp-nombre">Nombre</label>
+            <input type="text" class="form-control" id="inp-name">
+        </div>
+        <div class="mb-3">
+            <label for="inp-email">Email</label>
+            <input type="email" class="form-control" id="inp-email">
+        </div>
+        <div class="mb-3">
+            <label for="inp-pass">Contraseña</label>
+            <input type="password" class="form-control" id="inp-pass">
+        </div>
+        <div class="mb-3 mt-3">
+            <label for="inp-img" class="form-label">Imagen de perfil</label>
+            <input id="inp-img" class="form-control" type="file">
+        </div>
+        <div class="mb-3">
+            <label for="inp-born">Fecha de nacimiento (mm-dd-YYYY)</label>
+            <input type="text" class="form-control" id="inp-born">
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">
+                Registrarse
+            </button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascript %}
+const formSignup = document.getElementById('form-signup');
+const nameInp = document.getElementById('inp-name');
+const emailInp = document.getElementById('inp-email');
+const passInp = document.getElementById('inp-pass');
+const bornInp = document.getElementById('inp-born');
+
+formSignup.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    let formData = new FormData();
+    formData.append('image', document.getElementById('inp-img').files[0]);
+    formData.append('name', nameInp.value);
+    formData.append('email', emailInp.value);
+    formData.append('password', passInp.value);
+    formData.append('born_date', bornInp.value);
+    const {data} = await axios.post('/api/signup', formData);
+    formSignup.reset();
+})
+
+{% endblock %}

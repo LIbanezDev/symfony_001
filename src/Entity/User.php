@@ -2,49 +2,67 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ApiResource()
- */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['pet:no_owner', 'clinic:all'])]
     private $id;
 
+
+    #[Assert\NotBlank]
+    #[Assert\Email]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(['pet:no_owner', 'clinic:all'])]
     private $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
+    #[Ignore]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 5)]
     #[ORM\Column(type: 'string')]
     private $password;
 
     #[ORM\Column(type: 'string', length: 200)]
+    #[Groups(['pet:no_owner', 'clinic:all'])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $profile_image;
 
     #[ORM\Column(type: 'date')]
+    #[Groups('pet:no_owner')]
     private $born_date;
 
+    #[MaxDepth(1)]
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Pet::class)]
     private $pets;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $updated;
+
+    #[ORM\ManyToMany(targetEntity: Clinic::class, mappedBy: 'users')]
+    private $clinics;
 
     public function __construct()
     {
         $this->pets = new ArrayCollection();
+        $this->clinics = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,7 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -79,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -201,8 +219,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-     public function __toString(): string
-     {
-         return $this->name;
-     }
+
+    public function toString(): string
+    {
+        return $this->name;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
+    public function getUpdated(): ?\DateTimeInterface
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(?\DateTimeInterface $updated): self
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Clinic[]
+     */
+    public function getClinics(): Collection
+    {
+        return $this->clinics;
+    }
+
+    public function addClinic(Clinic $clinic): self
+    {
+        if (!$this->clinics->contains($clinic)) {
+            $this->clinics[] = $clinic;
+            $clinic->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClinic(Clinic $clinic): self
+    {
+        if ($this->clinics->removeElement($clinic)) {
+            $clinic->removeUser($this);
+        }
+
+        return $this;
+    }
 }
