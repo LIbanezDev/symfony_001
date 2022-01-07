@@ -12,7 +12,8 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'app_home', methods: 'GET')]
     public function index(PetRepository $petRepository, Request $request)
     {
-        $pageNumber = $request->get('page') || 1;
+        $pageNumber = 1;
+        if($request->get('page') != null) $pageNumber = (int) $request->get('page');
         $pets = $petRepository->findPaginated($pageNumber);
         $pages = ceil($petRepository->getCount() / 4);
         return $this->render('index.html.twig', [
