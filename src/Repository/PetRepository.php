@@ -26,14 +26,14 @@ class PetRepository extends ServiceEntityRepository
     //  * @return Pet[] Returns an array of Pet objects
     //  */
 
-    public function findPaginated($page)
+    public function findPaginated($page, $order)
     {
         $perPage = 4;
-        return $this->createQueryBuilder('p')
+        $query = $this->createQueryBuilder('p')
             ->leftJoin('p.clinic', 'clinic')
             ->leftJoin('p.owner', 'owner')
-            ->setMaxResults(25)
-            ->getQuery()
+            ->orderBy('p.'.$order, 'ASC');
+        return $query->getQuery()
             ->setMaxResults($perPage)
             ->setFirstResult(($page * $perPage) - $perPage)
             ->getResult();
